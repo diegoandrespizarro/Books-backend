@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(fileUpload({
     useTempFiles: true,
-    tempFileDir: '/tmp/'
+    tempFileDir: './tmp'
 }));
 
 app.use("/api", testRoutes);
