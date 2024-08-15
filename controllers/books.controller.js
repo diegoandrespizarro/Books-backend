@@ -3,10 +3,34 @@ import fsExtra from 'fs-extra'
 import { uploadImageToCloudinary } from '../utils/cloudinary.js'
 import Book from '../models/book.model.js'
 
-const getBooks = (request, resonse) => {
-  res.send('Books list')}
-const getBookbyId = (request, response) => {
-  res.send('Book details')}
+const transformBook = (book) => {
+  return {
+    id: book._id,
+    bookTitle: book.bookTitle,
+    bookAuthor: book.bookAuthor,
+  }
+}
+
+const getBooks = async (_request, response) => {
+  const books = await Book.find()
+  console.log({books})
+  response.json({message: 'Books list', 
+  data: books.map((book) => transformBook(book)), 
+  meta: {
+    totalBooks: books.length
+  }})
+}
+
+
+const getBookById = async (request, response) => {
+  const {bookId} = request.params 
+
+  const book = await Book.findById(bookId)
+
+  response.json({
+  message: 'Book found', 
+  data: transformBook(book)})
+}
 
 const createBook = async  (request, response) => {
     console.log(request.body)
@@ -42,4 +66,4 @@ const deleteBooks = (request, response) => {
 const deleteBookById = (req, response) => {
   res.send('Book deleted')}
 
-export { getBooks, getBookbyId, createBook, putBook, deleteBooks, deleteBookById }
+export { getBooks, getBookById, createBook, putBook, deleteBooks, deleteBookById }
